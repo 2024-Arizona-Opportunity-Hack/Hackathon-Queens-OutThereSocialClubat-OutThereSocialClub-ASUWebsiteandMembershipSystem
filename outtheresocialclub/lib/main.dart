@@ -7,7 +7,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'WebView Demo',
+      title: 'Outthere Social Club',
       home: HomePage(),
     );
   }
@@ -18,7 +18,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home Page'),
+        title: Text('Outthere Social Club'),
       ),
       body: Center(
         child: ElevatedButton(
@@ -53,8 +53,12 @@ class _WebViewPageState extends State<WebViewPage> {
   void _initializeWebView() {
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(const Color(0x00000000))
       ..setNavigationDelegate(
         NavigationDelegate(
+          onProgress: (int progress) {
+            // Update loading bar.
+          },
           onPageStarted: (String url) {
             setState(() {
               isLoading = true;
@@ -66,7 +70,8 @@ class _WebViewPageState extends State<WebViewPage> {
             });
           },
           onWebResourceError: (WebResourceError error) {
-            // Handle errors here
+            // Handle errors here.
+            print('Error loading page: $error');
           },
         ),
       )
@@ -77,7 +82,7 @@ class _WebViewPageState extends State<WebViewPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('you.com'),
+        title: Text('Outthere Social Club'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.arrow_back),

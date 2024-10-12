@@ -1,0 +1,21 @@
+# Flutter/Dart/Pub related
+.dart_tool/
+.packages
+.pub-cache/
+.flutter-plugins
+.flutter-plugins-dependencies
+.macos/
+.idea/
+
+# Build output
+/build/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+android/app/*.keystore
+
+# IDE specific files
+.vscode/
+.idea/
+
+# macOS specific files
+.DS_Store
