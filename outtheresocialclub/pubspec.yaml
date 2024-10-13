@@ -53,10 +53,9 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-  uses-material-design: true
   assets:
-    - lib/assets/OTSC_Logo_Horizontal_Black.png
-    - lib/assets/OTSC_Logo_Wordmark_Horizontal_Black.png
+    - lib/assets/logos/OTSC_Logo_Horizontal_Black.png
+    - lib/assets/logos/OTSC_Logo_Wordmark_Horizontal_Black.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

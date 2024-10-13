@@ -52,24 +52,38 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Login")),
+      appBar: AppBar(title: Text("Login")),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start, // Center content vertically
             children: [
+              // Logo at the top-center of the screen
+              Center(
+                child: Image.asset(
+                  'lib/assets/logos/OTSC_Logo_Horizontal_Black.png', // Path to your logo
+                  width: 300,  // Set the width of the logo
+                  height: 300, // Set the height of the logo
+                  fit: BoxFit.contain,
+                ),
+              ),
+              SizedBox(height: 30), // Spacing between the logo and the form
+
+              // Username input field
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Username'),
+                decoration: InputDecoration(labelText: 'Username'),
                 validator: (value) {
                   if (value!.isEmpty) return 'Enter your username';
                   return null;
                 },
                 onSaved: (value) => _username = value!,
               ),
+
+              // Password input field
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Password'),
+                decoration: InputDecoration(labelText: 'Password'),
                 obscureText: true,
                 validator: (value) {
                   if (value!.isEmpty) return 'Enter your password';
@@ -77,10 +91,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
                 onSaved: (value) => _password = value!,
               ),
-              const SizedBox(height: 20),
+
+              SizedBox(height: 20), // Spacing before the login button
+
+              // Login button
               ElevatedButton(
                 onPressed: _login,
-                child: const Text("Login"),
+                child: Text("Login"),
               ),
             ],
           ),
