@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class DealDetailScreen extends StatelessWidget {
   final Map<String, dynamic> deal;
 
-  DealDetailScreen({required this.deal});
+  const DealDetailScreen({super.key, required this.deal});
 
   @override
   Widget build(BuildContext context) {
@@ -17,12 +17,12 @@ class DealDetailScreen extends StatelessWidget {
           children: [
             Text(
               'Deal Name: ${deal['name']}',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Text(
               'Details: ${deal['url']}',
-              style: TextStyle(fontSize: 18),
+              style: const TextStyle(fontSize: 18),
             ),
           ],
         ),

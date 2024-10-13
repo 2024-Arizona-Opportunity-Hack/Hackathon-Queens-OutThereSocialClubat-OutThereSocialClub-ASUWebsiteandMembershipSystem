@@ -3,7 +3,7 @@ import 'screens/login_screen.dart';
 import 'screens/deals_screen.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -18,8 +18,8 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => LoginScreen(),
-        '/deals': (context) => DealsScreen(),
+        '/': (context) => const LoginScreen(),
+        '/deals': (context) => const DealsScreen(),
       },
     );
   }

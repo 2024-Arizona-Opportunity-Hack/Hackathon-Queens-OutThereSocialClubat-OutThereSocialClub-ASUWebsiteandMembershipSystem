@@ -53,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Login")),
+      appBar: AppBar(title: const Text("Login")),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -71,11 +71,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   fit: BoxFit.contain,
                 ),
               ),
-              SizedBox(height: 30), // Spacing between the logo and the form
+              const SizedBox(height: 30), // Spacing between the logo and the form
 
               // Username input field
               TextFormField(
-                decoration: InputDecoration(labelText: 'Username'),
+                decoration: const InputDecoration(labelText: 'Username'),
                 validator: (value) {
                   if (value!.isEmpty) return 'Enter your username';
                   return null;
@@ -85,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
               // Password input field
               TextFormField(
-                decoration: InputDecoration(labelText: 'Password'),
+                decoration: const InputDecoration(labelText: 'Password'),
                 obscureText: true,
                 validator: (value) {
                   if (value!.isEmpty) return 'Enter your password';
@@ -94,12 +94,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 onSaved: (value) => _password = value!,
               ),
 
-              SizedBox(height: 20), // Spacing before the login button
+              const SizedBox(height: 20), // Spacing before the login button
 
               // Login button
               ElevatedButton(
                 onPressed: _login,
-                child: Text("Login"),
+                child: const Text("Login"),
               ),
             ],
           ),
