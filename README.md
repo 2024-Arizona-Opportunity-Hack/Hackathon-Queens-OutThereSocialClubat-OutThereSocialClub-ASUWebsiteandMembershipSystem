@@ -42,3 +42,5 @@ develop mobile applications.
 Future deployments of Out There Social Club's mobile app includes full integration
 to the SQL backend using WordPress's backend API, which include user auth, and coupon display.
 
+## loom video
+https://www.loom.com/share/5a2d69c5f0724a43ac3895dac52a7084?sid=422c851b-f797-4bbb-9c79-0f5abc24e789
