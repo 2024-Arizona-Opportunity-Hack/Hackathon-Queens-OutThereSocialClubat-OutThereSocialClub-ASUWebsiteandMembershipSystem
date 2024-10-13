@@ -9,7 +9,11 @@ class DealDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(deal['name'])),
+      backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
+      appBar: AppBar(
+        title: Text(deal['name']),
+        backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
+      ), 
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
