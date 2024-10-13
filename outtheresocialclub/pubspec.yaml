@@ -28,6 +28,9 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  mysql1: ^0.20.0
+  logger: ^2.4.0
+  foundation: ^1.0.0
   flutter:
     sdk: flutter
   webview_flutter: ^4.0.7
@@ -56,6 +59,8 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - lib/assets/images/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

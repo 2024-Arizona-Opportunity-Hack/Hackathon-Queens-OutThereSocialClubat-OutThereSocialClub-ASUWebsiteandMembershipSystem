@@ -19,3 +19,6 @@ android/app/*.keystore
 
 # macOS specific files
 .DS_Store
+
+# database login
+/outtheresocialclub/lib/services/db_connect.dart
