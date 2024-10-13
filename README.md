@@ -20,10 +20,10 @@
 Brief description of your project and its goals.
 
 ## Tech Stack
-- Frontend: 
-- Backend: 
-- Database: 
-- APIs: 
+- Frontend: Flutter
+- Backend: SQL
+- Database: SQL
+- APIs: MYSQL1
 <!-- Add/modify as needed -->
 
 
