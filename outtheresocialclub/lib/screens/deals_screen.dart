@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 // import '../services/db_connect.dart'; // Commented out: Import DB connection service
 
 class DealsScreen extends StatefulWidget {
+  const DealsScreen({super.key});
+
   @override
   _DealsScreenState createState() => _DealsScreenState();
 }

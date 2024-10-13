@@ -29,8 +29,6 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   mysql1: ^0.20.0
-  logger: ^2.4.0
-  foundation: ^1.0.0
   flutter:
     sdk: flutter
   webview_flutter: ^4.0.7
@@ -55,12 +53,14 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  uses-material-design: true
+  assets:
+    - lib/assets/OTSC_Logo_Horizontal_Black.png
+    - lib/assets/OTSC_Logo_Wordmark_Horizontal_Black.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
-  assets:
-    - lib/assets/images/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

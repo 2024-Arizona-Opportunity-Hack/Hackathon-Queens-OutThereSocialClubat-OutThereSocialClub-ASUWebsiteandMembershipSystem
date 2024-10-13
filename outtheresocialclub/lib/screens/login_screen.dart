@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 // import '../services/db_connect.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -35,12 +37,12 @@ class _LoginScreenState extends State<LoginScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Login Failed'),
+        title: const Text('Login Failed'),
         content: Text(message),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('OK'),
+            child: const Text('OK'),
           ),
         ],
       ),
@@ -50,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Login")),
+      appBar: AppBar(title: const Text("Login")),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -59,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextFormField(
-                decoration: InputDecoration(labelText: 'Username'),
+                decoration: const InputDecoration(labelText: 'Username'),
                 validator: (value) {
                   if (value!.isEmpty) return 'Enter your username';
                   return null;
@@ -67,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 onSaved: (value) => _username = value!,
               ),
               TextFormField(
-                decoration: InputDecoration(labelText: 'Password'),
+                decoration: const InputDecoration(labelText: 'Password'),
                 obscureText: true,
                 validator: (value) {
                   if (value!.isEmpty) return 'Enter your password';
@@ -75,10 +77,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
                 onSaved: (value) => _password = value!,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _login,
-                child: Text("Login"),
+                child: const Text("Login"),
               ),
             ],
           ),
