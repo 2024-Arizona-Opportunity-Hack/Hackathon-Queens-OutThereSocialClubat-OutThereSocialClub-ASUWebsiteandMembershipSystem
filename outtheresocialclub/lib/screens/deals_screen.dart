@@ -1,5 +1,6 @@
 // deals_screen.dart
 import 'package:flutter/material.dart';
+import 'deals_detail.dart'; // Import the new screen
 // import '../services/db_connect.dart'; // Commented out: Import DB connection service
 
 class DealsScreen extends StatefulWidget {
@@ -40,19 +41,19 @@ class _DealsScreenState extends State<DealsScreen> {
       appBar: AppBar(title: const Text("Deals")),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center, // Center vertically
-          crossAxisAlignment: CrossAxisAlignment.center, // Center horizontally
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const Text(
               "Welcome to the Deals Page!",
               style: TextStyle(fontSize: 24),
-              textAlign: TextAlign.center, // Ensure the text is centered
+              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
             const Text(
               "Deals for you:",
               style: TextStyle(fontSize: 18),
-              textAlign: TextAlign.center, // Ensure this text is centered too
+              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 10),
             Expanded(
@@ -65,14 +66,20 @@ class _DealsScreenState extends State<DealsScreen> {
                     leading: const Icon(Icons.local_offer),
                     title: Text(
                       deal['name'],
-                      textAlign: TextAlign.center, // Center the deal title
+                      textAlign: TextAlign.center,
                     ),
                     subtitle: Text(
                       deal['url'],
-                      textAlign: TextAlign.center, // Center the deal subtitle
+                      textAlign: TextAlign.center,
                     ),
                     onTap: () {
-                      print('Selected: ${deal['name']}');
+                      // Navigate to the DealDetailScreen when tapped
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DealDetailScreen(deal: deal),
+                        ),
+                      );
                     },
                   );
                 },

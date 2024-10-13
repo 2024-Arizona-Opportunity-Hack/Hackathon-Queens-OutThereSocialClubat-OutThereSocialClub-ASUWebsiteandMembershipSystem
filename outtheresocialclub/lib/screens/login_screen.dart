@@ -27,7 +27,8 @@ class _LoginScreenState extends State<LoginScreen> {
       //  _showErrorDialog('Invalid username or password');
       //}
       // Assuming login is successful
-      Navigator.pushReplacementNamed(context, '/deals'); // delete this line when db is connected
+      Navigator.pushReplacementNamed(
+          context, '/deals'); // delete this line when db is connected
     }
   }
 
@@ -58,13 +59,14 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Form(
           key: _formKey,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start, // Center content vertically
+            mainAxisAlignment:
+                MainAxisAlignment.start, // Center content vertically
             children: [
               // Logo at the top-center of the screen
               Center(
                 child: Image.asset(
                   'lib/assets/logos/OTSC_Logo_Horizontal_Black.png', // Path to your logo
-                  width: 300,  // Set the width of the logo
+                  width: 300, // Set the width of the logo
                   height: 300, // Set the height of the logo
                   fit: BoxFit.contain,
                 ),
