@@ -1,68 +1,44 @@
-
-# 2024_fall Hackathon Project
-
-## Quick Links
-- [Hackathon Details](https://www.ohack.dev/hack/2024_fall)
-- [Team Slack Channel](https://opportunity-hack.slack.com/app_redirect?channel=hackathonqueens)
-- [Nonprofit Partner](https://ohack.dev/nonprofit/Pr1gNJ0mAE1usIna7YJt)
-- [Problem Statement](https://ohack.dev/project/EF7101xGDWEmrA3HDdLb)
-
-## Creator
-@Jordan Scott (on Slack)
-
-## Team "Hackathon Queens"
-- [Team Member 1](GitHub profile link)
-- [Team Member 2](GitHub profile link)
-- [Team Member 3](GitHub profile link)
+# Team 3 "Hackathon Queens"
+- [Jordan Scott](https://github.com/JordanS2025)
+- [Angel Velazquez](https://github.com/angel-vlzqz)
+- [Jonathan Rivas](https://github.com/JonathanRivas457)
+- [Carlos Llanes Villegas](https://github.com/CarLla468)
 <!-- Add all team members -->
 
-## Project Overview
-Brief description of your project and its goals.
+# Project Overview
+Out There Social Club seeks to develop a mobile application integration of 
+their WordPress API to facilitate access to the website without the need to open a browser.
 
-## Tech Stack
+With this integration, members of Out There Social Club would not need to utilize
+their browser to log in and obtain their coupon deals; they could access them 
+straight from the app.
+
+# How we built it
+
+### Tech Stack
 - Frontend: Flutter
-- Backend: SQL
+- Backend: WordPress
 - Database: SQL
 - APIs: MYSQL1
 <!-- Add/modify as needed -->
 
+# Problems We Faced
+One unfortunate challenge we ran into was the inability to connect our frontend
+to the backend using WordPress's API due to permissions not being in place for SSH
+and SFTP connectivity.
 
-## Getting Started
-Instructions on how to set up and run your project locally.
+# Accomplishments
+As a team, we can confidently say that we dove head-first into a project that no 
+one else in the entire hackathon wanted to take. As a team, we each got out of
+our comfort zones and strived to get as much done as possible. As a result, we are
+grateful of the technologies
+proud of the work we were able to accomplish in these last 24 hours
 
-```bash
-# Example commands
-git clone [your-repo-link]
-cd [your-repo-name]
-npm install
-npm start
-```
+# What we learned
+We familiarized ourselves with WordPress and learned how to use the Flutter framework to emulate mobile devices in our systems. With this, we gained an understanding of the Dart programming language, which flutter uses in order to
+develop mobile applications.
 
+# What's next for Out There Social Club
+Future deployments of Out There Social Club's mobile app includes full integration
+to the SQL backend using WordPress's backend API, which include user auth, and coupon display.
 
-## Your next steps
-1. ✅ Add everyone on your team to your GitHub repo like [this video posted in our Slack channel](https://opportunity-hack.slack.com/archives/C1Q6YHXQU/p1605657678139600)
-2. ✅ Create your DevPost project [like this video](https://youtu.be/vCa7QFFthfU?si=bzMQ91d8j3ZkOD03)
-3. ✅ Use the [2024 DevPost](https://opportunity-hack-2024-arizona.devpost.com) to submit your project
-4. ✅ Your DevPost final submission demo video should be 4 minutes or less
-5. ✅ Review the judging criteria on DevPost
-
-# What should your final Readme look like?
-Your readme should be a one-stop-shop for the judges to understand your project. It should include:
-- Team name
-- Team members
-- Slack channel
-- Problem statement
-- Tech stack
-- Link to your DevPost project
-- Link to your final demo video
-- Any other information you think is important
-
-You'll use this repo as your resume in the future, so make it shine! 🌟
-
-Examples of stellar readmes:
-- ✨ [2019 Team 3](https://github.com/2019-Arizona-Opportunity-Hack/Team-3)
-- ✨ [2019 Team 6](https://github.com/2019-Arizona-Opportunity-Hack/Team-6)
-- ✨ [2020 Team 2](https://github.com/2020-opportunity-hack/Team-02)
-- ✨ [2020 Team 4](https://github.com/2020-opportunity-hack/Team-04)
-- ✨ [2020 Team 8](https://github.com/2020-opportunity-hack/Team-08)
-- ✨ [2020 Team 12](https://github.com/2020-opportunity-hack/Team-12)
