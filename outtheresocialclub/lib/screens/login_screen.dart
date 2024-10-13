@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// import '../services/db_connect.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -7,6 +8,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
+  // final DBConnect _dbConnect = DBConnect(); // Instance of DBConnect
   String _username = '';
   String _password = '';
 
@@ -14,9 +16,35 @@ class _LoginScreenState extends State<LoginScreen> {
   void _login() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+      //bool isAuthenticated =
+      //    await _dbConnect.authenticateUser(_username, _password);
+      //
+      //if (isAuthenticated) {
+      //  Navigator.pushReplacementNamed(context, '/deals');
+      //} else {
+      //  _showErrorDialog('Invalid username or password');
+      //}
       // Assuming login is successful
-      Navigator.pushReplacementNamed(context, '/deals');
+      Navigator.pushReplacementNamed(context, '/deals'); // delete this line when db is connected
     }
+  }
+
+  // TODO: Implement the authenticateUser method in the DBConnect class
+  // Show error dialog
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Login Failed'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
