@@ -28,11 +28,11 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  mysql1: ^0.20.0
   flutter:
     sdk: flutter
-  webview_flutter: ^4.0.7
-  http: ^1.2.2
+  webview_flutter: ^4.4.4
+  http: ^1.1.0
+  flutter_riverpod: ^2.4.9 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
