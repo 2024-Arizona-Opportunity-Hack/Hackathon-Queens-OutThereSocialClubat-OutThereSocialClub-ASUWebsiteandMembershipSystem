@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/db_connect.dart';
 import 'package:mysql1/mysql1.dart';
+import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -8,8 +9,23 @@ class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
+
 // jordan's request
 class _LoginScreenState extends State<LoginScreen> {
+      final String apiUrl =
+      "https://maxwellclubcom.wpcomstaging.com/wp-json/wp/v2/users";
+    
+    Future<void> fetchUsers() async 
+  {
+    
+    final users = await http.get(Uri.parse(apiUrl));
+    if (users.statusCode == 200) {
+      print(users.body);
+    } else {
+      print('Failed to fetch users');
+    }
+  }
+  
   final _formKey = GlobalKey<FormState>();
   final _dbService = WordPressDBService();
   String _username = '';
@@ -32,7 +48,8 @@ class _LoginScreenState extends State<LoginScreen> {
         );
 
         // Check if user exists
-        bool userExists = await _dbService.checkUserExists(username);
+        void checkuser()
+        bool userExists = fetchUsers();
 
         // Remove loading indicator
         Navigator.pop(context);
