@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../services/db_connect.dart';
 import 'package:mysql1/mysql1.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -12,20 +14,30 @@ class LoginScreen extends StatefulWidget {
 
 // jordan's request
 class _LoginScreenState extends State<LoginScreen> {
-      final String apiUrl =
-      "https://maxwellclubcom.wpcomstaging.com/wp-json/wp/v2/users";
+      final String apiUrl = "https://maxwellclubcom.wpcomstaging.com/wp-json/jwt-auth/v1/token";
     
-    Future<void> fetchUsers() async 
-  {
-    
-    final users = await http.get(Uri.parse(apiUrl));
-    if (users.statusCode == 200) {
-      print(users.body);
-    } else {
-      print('Failed to fetch users');
-    }
-  }
-  
+    Future<bool> authenticateUser(String username, String password) async {
+      try {
+        final response = await http.post(
+          Uri.parse(apiUrl),
+          body: {
+            'username': username,
+            'password': password,
+          },
+        );
+
+        if (response.statusCode == 200) {
+          // Store the token for future authenticated requests
+          final token = jsonDecode(response.body)['token'];
+          // You can save this token in secure storage
+          return true;
+        }
+        return false;
+      } catch (e) {
+        print('Authentication error: $e');
+        return false;
+      }
+    }  
   final _formKey = GlobalKey<FormState>();
   final _dbService = WordPressDBService();
   String _username = '';
@@ -36,44 +48,15 @@ class _LoginScreenState extends State<LoginScreen> {
   void _login(String username) async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-
-      try {
-        // Show loading indicator
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (context) => const Center(
-            child: CircularProgressIndicator(),
-          ),
-        );
-
-        // Check if user exists
-        void checkuser()
-        bool userExists = fetchUsers();
-
-        // Remove loading indicator
-        Navigator.pop(context);
-
-        if (userExists) {
-          // User exists, proceed to deals page
-          Navigator.pushReplacementNamed(context, '/deals');
-        } else {
-          // Show error message
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Invalid email or password'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
-      } catch (e) {
-        // Remove loading indicator if still showing
-        Navigator.pop(context);
-
-        // Show error message
+      
+      final bool isAuthenticated = await authenticateUser(_username, _password);
+      
+      if (isAuthenticated) {
+        Navigator.pushReplacementNamed(context, '/deals');
+      } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Connection error: $e'),
+          const SnackBar(
+            content: Text('Invalid credentials'),
             backgroundColor: Colors.red,
           ),
         );
