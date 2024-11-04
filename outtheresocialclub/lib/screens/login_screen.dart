@@ -3,7 +3,7 @@ import '../services/db_connect.dart';
 import 'package:mysql1/mysql1.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,30 +14,40 @@ class LoginScreen extends StatefulWidget {
 
 // jordan's request
 class _LoginScreenState extends State<LoginScreen> {
-      final String apiUrl = "https://maxwellclubcom.wpcomstaging.com/wp-json/jwt-auth/v1/token";
-    
-    Future<bool> authenticateUser(String username, String password) async {
-      try {
-        final response = await http.post(
-          Uri.parse(apiUrl),
-          body: {
-            'username': username,
-            'password': password,
-          },
-        );
+  Future<void> _launchUrl() async {
+    final Uri _url = Uri.parse(
+        'https://maxwellclubcom.wpcomstaging.com/membership-join/membership-registration/');
+    if (!await launchUrl(_url)) {
+      throw Exception('Could not launch $_url');
+    }
+  }
 
-        if (response.statusCode == 200) {
-          // Store the token for future authenticated requests
-          final token = jsonDecode(response.body)['token'];
-          // You can save this token in secure storage
-          return true;
-        }
-        return false;
-      } catch (e) {
-        print('Authentication error: $e');
-        return false;
+  final String apiUrl =
+      "https://maxwellclubcom.wpcomstaging.com/wp-json/jwt-auth/v1/token";
+
+  Future<bool> authenticateUser(String username, String password) async {
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        body: {
+          'username': username,
+          'password': password,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        // Store the token for future authenticated requests
+        final token = jsonDecode(response.body)['token'];
+        // You can save this token in secure storage
+        return true;
       }
-    }  
+      return false;
+    } catch (e) {
+      print('Authentication error: $e');
+      return false;
+    }
+  }
+
   final _formKey = GlobalKey<FormState>();
   final _dbService = WordPressDBService();
   String _username = '';
@@ -48,9 +58,9 @@ class _LoginScreenState extends State<LoginScreen> {
   void _login(String username) async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      
+
       final bool isAuthenticated = await authenticateUser(_username, _password);
-      
+
       if (isAuthenticated) {
         Navigator.pushReplacementNamed(context, '/deals');
       } else {
@@ -187,13 +197,11 @@ class _LoginScreenState extends State<LoginScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Don't have an account? "),
+                  const Text("Don't have an account yet? "),
                   GestureDetector(
-                    onTap: () {
-                      // Handle apply today action
-                    },
+                    onTap: _launchUrl,
                     child: const Text(
-                      'Apply today',
+                      'Join us!', //TODO: Add a link that brings the user to the the website page to register
                       style: TextStyle(
                         color: Colors.blue,
                         decoration: TextDecoration.underline,
