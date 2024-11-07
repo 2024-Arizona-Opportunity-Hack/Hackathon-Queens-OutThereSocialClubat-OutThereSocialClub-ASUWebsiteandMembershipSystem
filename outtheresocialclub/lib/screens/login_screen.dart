@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import '../services/db_connect.dart';
-import 'package:mysql1/mysql1.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
@@ -22,10 +20,12 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  // Update the apiUrl to your WordPress endpoint
   final String apiUrl =
-      "https://maxwellclubcom.wpcomstaging.com/wp-json/jwt-auth/v1/token";
+      "https://maxwellclubcom.wpcomstaging.com/wp-json/wp/v2/membership";
 
-  Future<bool> authenticateUser(String username, String password) async {
+  Future<bool> authenticateUser(String username, String password) async 
+  {
     try {
       final response = await http.post(
         Uri.parse(apiUrl),
@@ -36,12 +36,31 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       if (response.statusCode == 200) {
-        // Store the token for future authenticated requests
-        final token = jsonDecode(response.body)['token'];
-        // You can save this token in secure storage
-        return true;
+        // Parse the response
+        final data = jsonDecode(response.body);
+
+        // Ensure both username and password are checked
+        if (data['success'] == true && data['user'] != null) {
+          final userData = data['user'];
+
+          // Check if the username and password match
+          if (userData['username'] == username && userData['password_valid'] == true) {
+            // Authentication successful
+            // You can store user data or token as needed
+            return true;
+          } else {
+            // Incorrect username or password
+            return false;
+          }
+        } else {
+          // Authentication failed
+          return false;
+        }
+      } else {
+        // Handle server error
+        print('Server error: ${response.statusCode}');
+        return false;
       }
-      return false;
     } catch (e) {
       print('Authentication error: $e');
       return false;
@@ -49,13 +68,10 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   final _formKey = GlobalKey<FormState>();
-  final _dbService = WordPressDBService();
   String _username = '';
   String _password = '';
 
-  // Simulate a login process
-  // Update your login function
-  void _login(String username) async {
+  void _login() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
@@ -124,7 +140,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               border: OutlineInputBorder(),
                             ),
                             validator: (value) {
-                              if (value!.isEmpty) return 'Enter your email';
+                              if (value == null || value.isEmpty) {
+                                return 'Enter your email';
+                              }
                               return null;
                             },
                             onSaved: (value) => _username = value!,
@@ -138,6 +156,12 @@ class _LoginScreenState extends State<LoginScreen> {
                               border: OutlineInputBorder(),
                             ),
                             obscureText: true,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Enter your password';
+                              }
+                              return null;
+                            },
                             onSaved: (value) => _password = value!,
                           ),
                           const SizedBox(
@@ -150,11 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             width: double.infinity,
                             child: ElevatedButton(
                               onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  _formKey.currentState!.save();
-                                  print('Username: $_username');
-                                  _login(_username);
-                                }
+                                _login();
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color.fromRGBO(
@@ -201,7 +221,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   GestureDetector(
                     onTap: _launchUrl,
                     child: const Text(
-                      'Join us!', //TODO: Add a link that brings the user to the the website page to register
+                      'Join us!', 
                       style: TextStyle(
                         color: Colors.blue,
                         decoration: TextDecoration.underline,
