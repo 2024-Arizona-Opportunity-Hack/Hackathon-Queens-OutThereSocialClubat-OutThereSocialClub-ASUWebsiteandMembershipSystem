@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,7 +12,10 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  String? _token; // Store the token after successful login
+  final _storage = FlutterSecureStorage();
+  final _formKey = GlobalKey<FormState>();
+  String _username = '';
+  String _password = '';
 
   Future<void> _launchUrl() async {
     final Uri url = Uri.parse(
@@ -30,44 +34,43 @@ class _LoginScreenState extends State<LoginScreen> {
         body: jsonEncode({'username': username, 'password': password}),
       );
 
+      print('Token request status: ${tokenResponse.statusCode}');
+      print('Token request response: ${tokenResponse.body}');
+
       if (tokenResponse.statusCode == 200) {
         final tokenData = jsonDecode(tokenResponse.body);
-        _token = tokenData['token'];
-        print('Received token: $_token');
 
-        // Step 2: Validate the token
-        final validateResponse = await http.post(
-          Uri.parse(
-              'https://outtheresocialclub.org/wp-json/api/v1/token-validate'),
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer $_token',
-          },
-        );
+        // Use 'jwt_token' key to get the actual token
+        if (tokenData.containsKey('jwt_token') &&
+            tokenData['jwt_token'] != null) {
+          final token = tokenData['jwt_token'];
+          print('Received token: $token');
 
-        if (validateResponse.statusCode == 200) {
-          // Step 3: Use the token to access the membership endpoint
+          // Store the token securely
+          await _storage.write(key: 'jwt_token', value: token);
+
+          // Step 2: Access the membership endpoint with the token
           final response = await http.get(
             Uri.parse(
                 'https://outtheresocialclub.org/wp-json/wp/v2/membership'),
-            headers: {
-              'Authorization': 'Bearer $_token',
-            },
+            headers: {'Authorization': 'Bearer $token'},
           );
 
           print('Membership endpoint status code: ${response.statusCode}');
           print('Membership response body: ${response.body}');
 
           if (response.statusCode == 200) {
-            final data = jsonDecode(response.body);
-            if (data['account_state'] == 'active') {
-              return true;
+            final List<dynamic> data = jsonDecode(response.body);
+
+            // Check if there’s at least one active account
+            for (var member in data) {
+              if (member['account_state'] == 'active') {
+                return true;
+              }
             }
           }
         } else {
-          print(
-              'Token validation failed with status: ${validateResponse.statusCode}');
-          print('Token validation response: ${validateResponse.body}');
+          print('JWT token not found or null in response.');
         }
       } else {
         print('Token request failed with status: ${tokenResponse.statusCode}');
@@ -85,10 +88,6 @@ class _LoginScreenState extends State<LoginScreen> {
       return false;
     }
   }
-
-  final _formKey = GlobalKey<FormState>();
-  String _username = '';
-  String _password = '';
 
   void _login() async {
     if (_formKey.currentState!.validate()) {
