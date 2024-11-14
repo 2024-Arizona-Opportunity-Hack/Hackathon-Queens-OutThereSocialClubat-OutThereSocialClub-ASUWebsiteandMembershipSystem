@@ -3,19 +3,21 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:logger/logger.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  LoginScreenState createState() => LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class LoginScreenState extends State<LoginScreen> {
   final _storage = FlutterSecureStorage();
   final _formKey = GlobalKey<FormState>();
   String _username = '';
   String _password = '';
+  final _logger = Logger();
 
   Future<void> _launchUrl() async {
     final Uri url = Uri.parse(
@@ -34,8 +36,8 @@ class _LoginScreenState extends State<LoginScreen> {
         body: jsonEncode({'username': username, 'password': password}),
       );
 
-      print('Token request status: ${tokenResponse.statusCode}');
-      print('Token request response: ${tokenResponse.body}');
+      _logger.d('Token request status: ${tokenResponse.statusCode}');
+      _logger.d('Token request response: ${tokenResponse.body}');
 
       if (tokenResponse.statusCode == 200) {
         final tokenData = jsonDecode(tokenResponse.body);
@@ -44,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
         if (tokenData.containsKey('jwt_token') &&
             tokenData['jwt_token'] != null) {
           final token = tokenData['jwt_token'];
-          print('Received token: $token');
+          _logger.d('Received token: $token');
 
           // Store the token securely
           await _storage.write(key: 'jwt_token', value: token);
@@ -56,8 +58,8 @@ class _LoginScreenState extends State<LoginScreen> {
             headers: {'Authorization': 'Bearer $token'},
           );
 
-          print('Membership endpoint status code: ${response.statusCode}');
-          print('Membership response body: ${response.body}');
+          _logger.d('Membership endpoint status code: ${response.statusCode}');
+          _logger.d('Membership response body: ${response.body}');
 
           if (response.statusCode == 200) {
             final List<dynamic> data = jsonDecode(response.body);
@@ -70,15 +72,16 @@ class _LoginScreenState extends State<LoginScreen> {
             }
           }
         } else {
-          print('JWT token not found or null in response.');
+          _logger.w('JWT token not found or null in response.');
         }
       } else {
-        print('Token request failed with status: ${tokenResponse.statusCode}');
-        print('Token request response: ${tokenResponse.body}');
+        _logger.w('Token request failed with status: ${tokenResponse.statusCode}');
+        _logger.d('Token request response: ${tokenResponse.body}');
       }
       return false;
     } catch (e) {
-      print('Authentication error: $e');
+      _logger.e('Authentication error: $e');
+      if (!mounted) return false;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Error connecting to server. Please try again.'),
@@ -94,6 +97,8 @@ class _LoginScreenState extends State<LoginScreen> {
       _formKey.currentState!.save();
 
       final bool isAuthenticated = await authenticateUser(_username, _password);
+
+      if (!mounted) return;
 
       if (isAuthenticated) {
         Navigator.pushReplacementNamed(context, '/deals');

@@ -7,10 +7,10 @@ class DealsScreen extends StatefulWidget {
   const DealsScreen({super.key});
 
   @override
-  _DealsScreenState createState() => _DealsScreenState();
+  DealsScreenState createState() => DealsScreenState();
 }
 
-class _DealsScreenState extends State<DealsScreen> {
+class DealsScreenState extends State<DealsScreen> {
   // final DBConnect _dbConnect = DBConnect(); // Commented out: DBConnect instance
   final List<Map<String, dynamic>> _deals = [
     // Sample deals (replace with fetched data when uncommenting DB logic)
