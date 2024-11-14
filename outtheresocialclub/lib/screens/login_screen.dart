@@ -10,59 +10,78 @@ class LoginScreen extends StatefulWidget {
   _LoginScreenState createState() => _LoginScreenState();
 }
 
-// jordan's request
 class _LoginScreenState extends State<LoginScreen> {
+  String? _token; // Store the token after successful login
+
   Future<void> _launchUrl() async {
-    final Uri _url = Uri.parse(
+    final Uri url = Uri.parse(
         'https://maxwellclubcom.wpcomstaging.com/membership-join/membership-registration/');
-    if (!await launchUrl(_url)) {
-      throw Exception('Could not launch $_url');
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      throw Exception('Could not launch $url');
     }
   }
 
-  // Update the apiUrl to your WordPress endpoint
-  final String apiUrl =
-      "https://maxwellclubcom.wpcomstaging.com/wp-json/wp/v2/membership";
-
-  Future<bool> authenticateUser(String username, String password) async 
-  {
+  Future<bool> authenticateUser(String username, String password) async {
     try {
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        body: {
-          'username': username,
-          'password': password,
-        },
+      // Step 1: Get token
+      final tokenResponse = await http.post(
+        Uri.parse('https://outtheresocialclub.org/wp-json/api/v1/token'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'username': username, 'password': password}),
       );
 
-      if (response.statusCode == 200) {
-        // Parse the response
-        final data = jsonDecode(response.body);
+      if (tokenResponse.statusCode == 200) {
+        final tokenData = jsonDecode(tokenResponse.body);
+        _token = tokenData['token'];
+        print('Received token: $_token');
 
-        // Ensure both username and password are checked
-        if (data['success'] == true && data['user'] != null) {
-          final userData = data['user'];
+        // Step 2: Validate the token
+        final validateResponse = await http.post(
+          Uri.parse(
+              'https://outtheresocialclub.org/wp-json/api/v1/token-validate'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $_token',
+          },
+        );
 
-          // Check if the username and password match
-          if (userData['username'] == username && userData['password_valid'] == true) {
-            // Authentication successful
-            // You can store user data or token as needed
-            return true;
-          } else {
-            // Incorrect username or password
-            return false;
+        if (validateResponse.statusCode == 200) {
+          // Step 3: Use the token to access the membership endpoint
+          final response = await http.get(
+            Uri.parse(
+                'https://outtheresocialclub.org/wp-json/wp/v2/membership'),
+            headers: {
+              'Authorization': 'Bearer $_token',
+            },
+          );
+
+          print('Membership endpoint status code: ${response.statusCode}');
+          print('Membership response body: ${response.body}');
+
+          if (response.statusCode == 200) {
+            final data = jsonDecode(response.body);
+            if (data['account_state'] == 'active') {
+              return true;
+            }
           }
         } else {
-          // Authentication failed
-          return false;
+          print(
+              'Token validation failed with status: ${validateResponse.statusCode}');
+          print('Token validation response: ${validateResponse.body}');
         }
       } else {
-        // Handle server error
-        print('Server error: ${response.statusCode}');
-        return false;
+        print('Token request failed with status: ${tokenResponse.statusCode}');
+        print('Token request response: ${tokenResponse.body}');
       }
+      return false;
     } catch (e) {
       print('Authentication error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Error connecting to server. Please try again.'),
+          backgroundColor: Colors.red,
+        ),
+      );
       return false;
     }
   }
@@ -96,36 +115,31 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
       appBar: AppBar(
         title: const Text("Login"),
-        backgroundColor:
-            const Color.fromARGB(255, 255, 255, 255), // AppBar background color
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       ),
       body: Center(
         child: SingleChildScrollView(
-          // Scrollable content to avoid overflow
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Logo with 300x300 size
               Image.asset(
                 'lib/assets/logos/OTSC_Logo_Horizontal_FullColor.png',
                 width: 350,
                 height: 350,
                 fit: BoxFit.contain,
               ),
-              const SizedBox(height: 0), // Spacing between logo and form
               Padding(
-                // Card containing the login form
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Card(
                   color: const Color.fromRGBO(255, 255, 255, 1),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0),
                     side: const BorderSide(
-                      color: Color.fromRGBO(44, 44, 44, 1), // Outline color
-                      width: .5, // Outline width
+                      color: Color.fromRGBO(44, 44, 44, 1),
+                      width: .5,
                     ),
                   ),
-                  elevation: 0.0, // Remove shadow
+                  elevation: 0.0,
                   child: Padding(
                     padding: const EdgeInsets.all(24.0),
                     child: Form(
@@ -133,7 +147,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // Email input field
                           TextFormField(
                             decoration: const InputDecoration(
                               labelText: 'Email',
@@ -147,9 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                             onSaved: (value) => _username = value!,
                           ),
-                          const SizedBox(height: 20), // Spacing between fields
-
-                          // Password input field
+                          const SizedBox(height: 20),
                           TextFormField(
                             decoration: const InputDecoration(
                               labelText: 'Password',
@@ -164,21 +175,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                             onSaved: (value) => _password = value!,
                           ),
-                          const SizedBox(
-                              height: 20), // Spacing before login button
-                          const SizedBox(
-                              height: 20), // Spacing before login button
-
-                          // Login button
+                          const SizedBox(height: 20),
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
-                              onPressed: () {
-                                _login();
-                              },
+                              onPressed: _login,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color.fromRGBO(
-                                    44, 44, 44, 1), // Black button
+                                backgroundColor:
+                                    const Color.fromRGBO(44, 44, 44, 1),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8.0),
                                 ),
@@ -190,8 +194,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                           ),
-
-                          // Forgot password link
                           Align(
                             alignment: Alignment.centerLeft,
                             child: TextButton(
@@ -213,7 +215,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              // "Don't have an account? Apply today" link
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -221,7 +222,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   GestureDetector(
                     onTap: _launchUrl,
                     child: const Text(
-                      'Join us!', 
+                      'Join us!',
                       style: TextStyle(
                         color: Colors.blue,
                         decoration: TextDecoration.underline,
