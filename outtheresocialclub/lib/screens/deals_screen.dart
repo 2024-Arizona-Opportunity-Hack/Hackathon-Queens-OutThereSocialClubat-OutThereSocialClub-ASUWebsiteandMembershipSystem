@@ -1,7 +1,6 @@
 // deals_screen.dart
 import 'package:flutter/material.dart';
 import 'deals_detail.dart'; // Import the new screen
-// import '../services/db_connect.dart'; // Commented out: Import DB connection service
 
 class DealsScreen extends StatefulWidget {
   const DealsScreen({super.key});
@@ -11,7 +10,6 @@ class DealsScreen extends StatefulWidget {
 }
 
 class DealsScreenState extends State<DealsScreen> {
-  // final DBConnect _dbConnect = DBConnect(); // Commented out: DBConnect instance
   final List<Map<String, dynamic>> _deals = [
     // Sample deals (replace with fetched data when uncommenting DB logic)
     {'name': 'Deal 1', 'url': 'Get 50% off on all items'},
@@ -25,15 +23,6 @@ class DealsScreenState extends State<DealsScreen> {
     // _loadDeals(); // Commented out: Load deals from DB
   }
 
-  // Method to load deals from the database
-  /*
-  Future<void> _loadDeals() async {
-    List<Map<String, dynamic>> deals = await _dbConnect.fetchDeals();
-    setState(() {
-      _deals = deals;
-    });
-  }
-  */
 
   @override
   Widget build(BuildContext context) {

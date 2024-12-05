@@ -64,12 +64,14 @@ class LoginScreenState extends State<LoginScreen> {
           if (response.statusCode == 200) {
             final List<dynamic> data = jsonDecode(response.body);
 
-            // Check if there’s at least one active account
+            // Check if the logged-in user's account is active
             for (var member in data) {
-              if (member['account_state'] == 'active') {
+              if (member['user_name'] == username && member['account_state'] == 'active') {
                 return true;
               }
             }
+            // User not found in members list or account not active
+            throw Exception('User is not an active member');
           }
         } else {
           _logger.w('JWT token not found or null in response.');
@@ -96,16 +98,24 @@ class LoginScreenState extends State<LoginScreen> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      final bool isAuthenticated = await authenticateUser(_username, _password);
+      try {
+        final bool isAuthenticated = await authenticateUser(_username, _password);
 
-      if (!mounted) return;
+        if (!mounted) return;
 
-      if (isAuthenticated) {
-        Navigator.pushReplacementNamed(context, '/deals');
-      } else {
+        if (isAuthenticated) {
+          Navigator.pushReplacementNamed(context, '/deals');
+        }
+      } catch (e) {
+        if (!mounted) return;
+        
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Invalid credentials'),
+          SnackBar(
+            content: Text(
+              e.toString().contains('not an active member')
+                  ? 'You must be an active member to login'
+                  : 'Invalid credentials'
+            ),
             backgroundColor: Colors.red,
           ),
         );
