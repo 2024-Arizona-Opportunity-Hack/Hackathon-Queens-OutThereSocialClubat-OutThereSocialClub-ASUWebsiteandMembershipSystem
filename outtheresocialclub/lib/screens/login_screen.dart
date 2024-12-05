@@ -20,8 +20,7 @@ class LoginScreenState extends State<LoginScreen> {
   final _logger = Logger();
 
   Future<void> _launchUrl() async {
-    final Uri url = Uri.parse(
-        'https://maxwellclubcom.wpcomstaging.com/membership-join/membership-registration/');
+    final Uri url = Uri.parse('https://outtheresocialclub.org/join-us/');
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
       throw Exception('Could not launch $url');
     }
@@ -66,7 +65,8 @@ class LoginScreenState extends State<LoginScreen> {
 
             // Check if the logged-in user's account is active
             for (var member in data) {
-              if (member['user_name'] == username && member['account_state'] == 'active') {
+              if (member['user_name'] == username &&
+                  member['account_state'] == 'active') {
                 return true;
               }
             }
@@ -77,7 +77,8 @@ class LoginScreenState extends State<LoginScreen> {
           _logger.w('JWT token not found or null in response.');
         }
       } else {
-        _logger.w('Token request failed with status: ${tokenResponse.statusCode}');
+        _logger
+            .w('Token request failed with status: ${tokenResponse.statusCode}');
         _logger.d('Token request response: ${tokenResponse.body}');
       }
       return false;
@@ -99,7 +100,8 @@ class LoginScreenState extends State<LoginScreen> {
       _formKey.currentState!.save();
 
       try {
-        final bool isAuthenticated = await authenticateUser(_username, _password);
+        final bool isAuthenticated =
+            await authenticateUser(_username, _password);
 
         if (!mounted) return;
 
@@ -108,14 +110,12 @@ class LoginScreenState extends State<LoginScreen> {
         }
       } catch (e) {
         if (!mounted) return;
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-              e.toString().contains('not an active member')
-                  ? 'You must be an active member to login'
-                  : 'Invalid credentials'
-            ),
+            content: Text(e.toString().contains('not an active member')
+                ? 'You must be an active member to login'
+                : 'Invalid credentials'),
             backgroundColor: Colors.red,
           ),
         );
